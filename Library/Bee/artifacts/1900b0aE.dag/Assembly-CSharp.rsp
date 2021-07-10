@@ -321,6 +321,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/VSSettingsProvider.ref.dll"
 "Assets/QuarterView 3D Action BE5/ReadMe/Scripts/ReadmeBE5.cs"
+"Assets/Scripts/Bullet.cs"
 "Assets/Scripts/cameraControl.cs"
 "Assets/Scripts/item.cs"
 "Assets/Scripts/playerController.cs"

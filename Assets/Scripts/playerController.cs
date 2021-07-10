@@ -10,7 +10,6 @@ public class playerController : MonoBehaviour
 
     float moveX;
     float moveZ;
-
     
     Animator anim;
     Rigidbody rigid;
@@ -27,9 +26,12 @@ public class playerController : MonoBehaviour
     bool swap1;
     bool swap2;
     bool swap3;
+    bool fireSkill; 
+    bool fireReady;
 
+    float fireDelay;
     GameObject nearObject;
-    GameObject equipWeapon;
+    weapon equipWeapon;
 
     void Awake()
     {
@@ -79,8 +81,14 @@ public class playerController : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.Alpha3)) {
             swap3 = false;
         }
+        if(Input.GetKeyDown(KeyCode.K)) {
+            fireSkill = true;
+        }
+        if(Input.GetKeyUp(KeyCode.K)) {
+            fireSkill = false;
+        }
         Swap();
-        
+        Attack();
 
         if(getItem && nearObject != null && !isDodge) {
             if(nearObject.tag == "weapon") {
@@ -141,15 +149,29 @@ public class playerController : MonoBehaviour
         if(swap2) weaponIndex = 1;
         if(swap3) weaponIndex = 2;
 
-        if((swap1 || swap2 || swap3) && !isJump && !isDodge) {
+        if((swap1 || swap2 || swap3) && !isJump ) {
             if(equipWeapon != null) {
-                equipWeapon.SetActive(false);
+                equipWeapon.gameObject.SetActive(false);
             }
             equipWeaponIndex = weaponIndex;
-            equipWeapon = weapons[weaponIndex];
-            equipWeapon.SetActive(true);
+            equipWeapon = weapons[weaponIndex].GetComponent<weapon>();
+            equipWeapon.gameObject.SetActive(true);
 
             anim.SetTrigger("doSwap");
+        }
+    }
+    void Attack() 
+    {
+        if(equipWeapon == null) {
+            return;
+        }
+        fireDelay += Time.deltaTime;
+        fireReady = equipWeapon.rate < fireDelay;
+
+        if(fireSkill && fireReady && !isDodge ) {
+            equipWeapon.Use();
+            anim.SetTrigger(equipWeapon.type == weapon.Type.Melee ? "doSwing" : "doShot");
+            fireDelay = 0;
         }
     }
     void DodgeOut()     
